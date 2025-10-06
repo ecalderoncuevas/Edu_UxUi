@@ -31,19 +31,55 @@ import {
 
 import TiltedCard from './components/TiltedCard';
 import LiquidEther from './components/LiquidEther';
-
-// 👇 ahora lo importas desde tu nuevo archivo
-import { ScrollAreaHorizontalDemo } from "@/components/ui/ScrollAreaHorizontalDemo"
+import { ScrollAreaHorizontalDemo } from "@/components/ui/ScrollAreaHorizontalDemo";
+import FlyingPosters from './components/FlyingPosters';
 
 function App() {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
+
+  const items = [
+    'https://picsum.photos/500/500?grayscale',
+    'https://picsum.photos/600/600?grayscale',
+    'https://picsum.photos/400/400?grayscale'
+  ]
 
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="relative">
+
+        {/* Fondo con LiquidEther */}
+        <div
+          style={{
+            width: '100%',
+            height: '100vh',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: 0
+          }}
+        >
+          <LiquidEther
+            colors={['#5227FF', '#FF9FFC', '#B19EEF']}
+            mouseForce={20}
+            cursorSize={100}
+            isViscous={false}
+            viscous={30}
+            iterationsViscous={32}
+            iterationsPoisson={32}
+            resolution={0.5}
+            isBounce={false}
+            autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            takeoverDuration={0.25}
+            autoResumeDelay={3000}
+            autoRampDuration={0.6}
+          />
+        </div>
+
         {/* Header con breadcrumb */}
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-white/70 backdrop-blur-md">
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
@@ -63,31 +99,11 @@ function App() {
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        
-        <div style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0, zIndex: 0 }}>
-        <LiquidEther
-          colors={[ '#5227FF', '#FF9FFC', '#B19EEF' ]}
-          mouseForce={20}
-          cursorSize={100}
-          isViscous={false}
-          viscous={30}
-          iterationsViscous={32}
-          iterationsPoisson={32}
-          resolution={0.5}
-          isBounce={false}
-          autoDemo={true}
-          autoSpeed={0.5}
-          autoIntensity={2.2}
-          takeoverDuration={0.25}
-          autoResumeDelay={3000}
-          autoRampDuration={0.6}
-        />
-      </div>
 
         {/* Contenido principal */}
-        <div className="flex flex-1 flex-col gap-8 p-8">
+        <div className="flex flex-1 flex-col gap-8 p-8 relative z-10">
           {/* Card Login */}
-          <Card className="w-full max-w-sm">
+          <Card className="w-full max-w-sm bg-white/80 backdrop-blur-md shadow-md">
             <CardHeader>
               <CardTitle>Login to your account</CardTitle>
               <CardDescription>
@@ -134,14 +150,32 @@ function App() {
             </CardFooter>
           </Card>
 
-          {/* Calendario */}
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="rounded-md border shadow-sm"
-            captionLayout="dropdown"
-          />
+          {/* Calendario con FlyingPosters al lado */}
+          <div className="flex flex-col md:flex-row items-start justify-center md:justify-start gap-16">
+            {/* Calendario en su posición original */}
+            <div>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="rounded-md border shadow-sm bg-white/80 backdrop-blur-md p-4"
+                captionLayout="dropdown"
+              />
+            </div>
+
+            {/* FlyingPosters al costado */}
+            <div
+              style={{
+                height: '500px',
+                width: '500px',
+                position: 'relative',
+              }}
+            >
+              <FlyingPosters items={items} />
+            </div>
+          </div>
+
+          {/* Tarjeta con efecto Tilt */}
           <TiltedCard
             imageSrc="https://i.scdn.co/image/ab67616d0000b273d9985092cd88bffd97653b58"
             altText="Kendrick Lamar - GNX Album Cover"
@@ -157,7 +191,7 @@ function App() {
             displayOverlayContent={true}
             overlayContent={
               <p className="tilted-card-demo-text">
-                Kendrick Lamar - GNX  
+                Kendrick Lamar - GNX
               </p>
             }
           />
@@ -167,7 +201,6 @@ function App() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-    
   )
 }
 
